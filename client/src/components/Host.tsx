@@ -7,8 +7,9 @@ const Host: React.FC = () => {
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const wsUrl = process.env.REACT_APP_WSS_URL || `ws://${window.location.hostname}:8080`;
-    ws.current = new WebSocket(wsUrl);
+  const defaultWs = `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}`;
+  const wsUrl = process.env.REACT_APP_WSS_URL || defaultWs;
+  ws.current = new WebSocket(wsUrl);
 
     ws.current.onopen = () => {
       console.log('Connected to signaling server');
