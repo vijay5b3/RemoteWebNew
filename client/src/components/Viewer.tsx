@@ -51,7 +51,15 @@ const Viewer: React.FC = () => {
 
         peerConnection.current.ontrack = (event) => {
           if (videoRef.current) {
-            videoRef.current.srcObject = event.streams[0];
+            // Find the video track and assign it to the video element
+            const videoTrack = event.streams[0].getVideoTracks()[0];
+            if (videoTrack) {
+              const newStream = new MediaStream([videoTrack]);
+              videoRef.current.srcObject = newStream;
+              console.log('Video track received and assigned.');
+            } else {
+              console.warn('No video track found in the received stream.');
+            }
           }
           setPcStatus('connected');
         };
