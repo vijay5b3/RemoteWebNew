@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run start --workspace=server",
     "install": "npm install --workspace=server && npm install --workspace=client",
-    "build:client": "npm run build --workspace=client"
+    "build:client": "npm run build --workspace=client --omit=dev"
   },
   "keywords": [
     "webrtc",
