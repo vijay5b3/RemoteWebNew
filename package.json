@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run start --workspace=server",
-    "install": "npm install --workspace=server && npm install --workspace=client",
+    "bootstrap": "npm install --workspace=server && npm install --workspace=client",
+    "bootstrap:ci": "npm ci --workspace=server --omit=dev && npm ci --workspace=client --omit=dev",
     "build:client": "npm run build --workspace=client --omit=dev"
   },
   "keywords": [
