@@ -3,16 +3,29 @@ import React, { useEffect, useRef, useState } from 'react';
 const Host: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [wsStatus, setWsStatus] = useState<string>('disconnected');
+  const [pcStatus, setPcStatus] = useState<string>('idle');
   const peerConnection = useRef<RTCPeerConnection | null>(null);
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-  const defaultWs = `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}`;
-  const wsUrl = process.env.REACT_APP_WSS_URL || defaultWs;
-  ws.current = new WebSocket(wsUrl);
+    const defaultWs = `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}`;
+    const wsUrl = process.env.REACT_APP_WSS_URL || defaultWs;
+    ws.current = new WebSocket(wsUrl);
 
     ws.current.onopen = () => {
       console.log('Connected to signaling server');
+      setWsStatus('connected');
+    };
+
+    ws.current.onerror = (err) => {
+      console.error('WebSocket error', err);
+      setWsStatus('error');
+    };
+
+    ws.current.onclose = () => {
+      console.log('WebSocket closed');
+      setWsStatus('closed');
     };
 
     ws.current.onmessage = async (message) => {
@@ -63,6 +76,13 @@ const Host: React.FC = () => {
       ],
     });
 
+    if (peerConnection.current) {
+      setPcStatus('connecting');
+      peerConnection.current.onconnectionstatechange = () => {
+        setPcStatus(peerConnection.current?.connectionState || 'unknown');
+      };
+    }
+
     stream.getTracks().forEach(track => {
       peerConnection.current?.addTrack(track, stream);
     });
@@ -77,6 +97,7 @@ const Host: React.FC = () => {
     await peerConnection.current.setLocalDescription(offer);
 
     ws.current?.send(JSON.stringify({ type: 'offer', sdp: offer.sdp, to: viewerId }));
+    setPcStatus('offer-sent');
   };
 
   return (
@@ -91,6 +112,9 @@ const Host: React.FC = () => {
         <p>Connecting to signaling server...</p>
       )}
       <video ref={videoRef} autoPlay muted style={{ width: '100%' }} />
+      <div className="mt-3">
+        <strong>WebSocket:</strong> {wsStatus} {' '} <strong>Peer:</strong> {pcStatus}
+      </div>
     </div>
   );
 };
