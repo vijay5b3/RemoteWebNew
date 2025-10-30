@@ -1,0 +1,22 @@
+{
+  "name": "web-remote-desktop",
+  "version": "1.0.0",
+  "description": "Web-based remote desktop application",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run start --workspace=server",
+    "install": "npm install --workspace=server && npm install --workspace=client",
+    "build:client": "npm run build --workspace=client"
+  },
+  "keywords": [
+    "webrtc",
+    "remote-desktop",
+    "react"
+  ],
+  "author": "Gemini",
+  "license": "ISC",
+  "workspaces": [
+    "client",
+    "server"
+  ]
+}
