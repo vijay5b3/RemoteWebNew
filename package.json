@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run start --workspace=server",
     "bootstrap": "npm install --workspace=server && npm install --workspace=client",
-    "bootstrap:ci": "npm ci --workspace=server --omit=dev && npm ci --workspace=client --omit=dev",
+  "bootstrap:ci": "npm ci --workspace=server --omit=dev && npm ci --workspace=client --omit=dev && npm run build:client",
     "build:client": "npm run build --workspace=client --omit=dev"
   },
   "keywords": [

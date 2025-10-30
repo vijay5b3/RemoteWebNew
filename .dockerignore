@@ -1,0 +1,11 @@
+node_modules
+client/node_modules
+server/node_modules
+npm-debug.log*
+.git
+.idea
+dist
+build
+*.log
+.env
+\.env*
