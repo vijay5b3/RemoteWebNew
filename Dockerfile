@@ -4,8 +4,8 @@ WORKDIR /app
 
 # Copy root and workspace package files for dependency install
 COPY package.json package-lock.json ./
-COPY client/package.json client/package-lock.json client/
-COPY server/package.json server/package-lock.json server/
+COPY client/package.json client/
+COPY server/package.json server/
 
 # Install production deps only (CI style)
 RUN npm ci --omit=dev
